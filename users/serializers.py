@@ -30,3 +30,32 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return attrs
 
 # LoginSerializer
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
+
+    default_error_messages = {
+        'error_account':_('User account is disable.'),
+        'error_exists':_('User not exists to system.')
+    }
+
+    def __init__(self, *args, **kwargs):
+        super(UserLoginSerializer, self).__init__(*args, **kwargs)
+        self.user = None
+
+    def validate(self, attrs):
+        self.user = authenticate(username=attrs.get("username"), password=attrs.get('password'))
+        if self.user:
+            if not self.user.is_active:
+                raise serializers.ValidationError(self.error_messages['error_account'])
+            return attrs
+        else:
+            raise serializers.ValidationError(self.error_messages['error_exists'])
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    auth_token = serializers.CharField(source='key')
+
+    class Meta:
+        model = Token
+        fields = ("auth_token", "created")
