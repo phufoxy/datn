@@ -19,8 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
+api_urls = [
+    path('', include('users.urls')),
+]
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(api_urls)),
 ]
 
 
