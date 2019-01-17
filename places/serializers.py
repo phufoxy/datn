@@ -5,8 +5,20 @@ from django.utils.translation import ugettext_lazy as _
 
 YOUR_MAX = 10
 TEXT_MIN = 20
+DEFAULT_MIN = 2
+
+# Serializer
+class PlaceDetailSerializer(serializers.ModelSerializer):
+   
+    class Meta:
+        model = PlaceDetails
+        fields = '__all__'
+    
+    
+
 # Place 
 class PlaceSerializer(serializers.ModelSerializer):
+    details = PlaceDetailSerializer(many=True, read_only=True)
     images = Base64ImageField(required=False)
     default_error_messages = {
         'error_length':_('The length must be greater than 10'),
@@ -22,5 +34,4 @@ class PlaceSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(self.error_messages['error_length'])
         if len(attrs['content']) < TEXT_MIN:
             raise serializers.ValidationError(self.error_messages['error_content'])
-
         return attrs

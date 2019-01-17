@@ -25,9 +25,9 @@ class Place(TypeInfo):
         return self.name + '-' + self.city
 
 class PlaceDetails(models.Model):
-    place = models.ForeignKey(Place,on_delete=models.CASCADE)
-    title = models.CharField(max_length=250)
-    body = RichTextUploadingField()
+    place = models.ForeignKey(Place,related_name='details',on_delete=models.CASCADE)
+    title = models.CharField(max_length=250,default="Null")
+    body = RichTextUploadingField(default="Null")
 
     def __str__(self):
         return self.place.name
