@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'media',
     'corsheaders',
-    'places'
+    'places',
+    'users'
 
 ]
 
