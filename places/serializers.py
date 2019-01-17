@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from places.models import Place
+from places.models import Place, PlaceDetails
 from drf_extra_fields.fields import Base64ImageField
 from django.utils.translation import ugettext_lazy as _
 
