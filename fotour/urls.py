@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 api_urls = [
     path('', include('users.urls')),
     path('',include('places.urls')),
+    path('',include('house.urls')),
     path('ckeditor/',include('ckeditor_uploader.urls')),
 ]
 
