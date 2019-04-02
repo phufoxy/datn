@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'users',
     'ckeditor',
     'ckeditor_uploader',
-    'house'
+    'house',
+    'restaurants',
+    'tour'
 ]
 
 MIDDLEWARE = [

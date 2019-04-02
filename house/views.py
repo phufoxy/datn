@@ -5,6 +5,35 @@ from house.serializers import HouseSerializer, HouseDetailSerializer
 from rest_framework.response import Response
 from rest_framework import status
 # Create your views here.
+# List Tour Home
+class HouseListHome(ListCreateAPIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = HouseSerializer
+    def get(self, request, format = None):
+        objects = House.objects.all()
+        serializer = HouseSerializer(objects, many = True)
+        return Response(serializer.data)
+
+class HouseCount(ListCreateAPIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = HouseSerializer
+    def get(self, request, format = None):
+        objects = House.objects.all()
+        return Response(objects.count())
+
+# List Id Tour
+class HouseEditHome(RetrieveUpdateDestroyAPIView):
+    serializer_class = HouseSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly, )
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            pk = self.kwargs.get('pk')
+            object = House.objects.get(pk=kwargs['pk'])
+            serializer = HouseSerializer(object)
+            return Response(serializer.data, status = status.HTTP_200_OK)
+        except House.DoesNotExist:
+            return Response(data={'message': "Not Page"}, status=status.HTTP_404_NOT_FOUND)
+
 class HouseListCreateAPIView(ListCreateAPIView):
     # The AllowAny permission class will allow unrestricted access, 
     # regardless of if the request was authenticated or unauthenticated.
@@ -52,7 +81,7 @@ class HouseEditAPIView(RetrieveUpdateDestroyAPIView):
         if objects.id:
             House.objects.get(id=objects.id).delete()
             return Response(data={'message': "Delete Success"},
-                        status=status.HTTP_400_BAD_REQUEST)
+                        status=status.HTTP_200_OK)
         self.perform_destroy(objects)
         return Response(status=status.HTTP_204_NO_CONTENT)
 

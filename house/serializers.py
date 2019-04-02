@@ -14,7 +14,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
 
 class HouseSerializer(serializers.ModelSerializer):
     # details = PlaceDetailSerializer(many=True, read_only=True)
-    images = Base64ImageField(required=False)
+    # images = Base64ImageField(required=False)
     details = HouseDetailSerializer(many=True, read_only=True)
     default_error_messages = {
         'error_length':_('The length must be greater than 10'),

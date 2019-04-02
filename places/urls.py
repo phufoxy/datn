@@ -1,5 +1,5 @@
 from django.urls import path, include
-from places.views import PlaceListCreateAPIView, PlaceEditAPIView, PlaceDetailCreateAPIView, PlaceDetailEditAPIView, PlaceListHome, PlaceEditHome
+from places.views import PlaceCountHome,PlaceListCreateAPIView, PlaceMaxHome, PlaceEditAPIView, PlaceDetailCreateAPIView, PlaceDetailEditAPIView, PlaceListHome, PlaceEditHome, PlaceTopHome
 
 app_name = 'place'
 urlpatterns = [
@@ -13,6 +13,9 @@ urlpatterns = [
     ])),
     path('place/',include([
         path('', PlaceListHome.as_view(),name='list-places-home'),
+        path('top/',PlaceTopHome.as_view(),name='list-places-top'),
+        path('max/',PlaceMaxHome.as_view(),name='list-places-max'),
+        path('count/',PlaceCountHome.as_view(),name="list-places-count"),
         path('<int:pk>/',PlaceEditHome.as_view(),name='list-place-edit-home'),
     ]))
 ]

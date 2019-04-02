@@ -3,8 +3,8 @@ from places.models import Place, PlaceDetails
 from drf_extra_fields.fields import Base64ImageField
 from django.utils.translation import ugettext_lazy as _
 
-YOUR_MAX = 10
-TEXT_MIN = 20
+YOUR_MAX = 1
+TEXT_MIN = 1
 DEFAULT_MIN = 2
 
 # Serializer
@@ -19,7 +19,7 @@ class PlaceDetailSerializer(serializers.ModelSerializer):
 # Place 
 class PlaceSerializer(serializers.ModelSerializer):
     details = PlaceDetailSerializer(many=True, read_only=True)
-    images = Base64ImageField(required=False)
+    # images = Base64ImageField(required=False)
     default_error_messages = {
         'error_length':_('The length must be greater than 10'),
         'error_content':_('Content Length mus be greater than 20.'),

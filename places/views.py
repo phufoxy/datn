@@ -4,6 +4,7 @@ from places.models import Place, PlaceDetails
 from places.serializers import PlaceSerializer, PlaceDetailSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from django.db.models import Max, Sum, Count
 
 # Create your views here.
 # Home Places
@@ -15,14 +16,41 @@ class PlaceListHome(ListCreateAPIView):
         serializer = PlaceSerializer(objects, many = True)
         return Response(serializer.data)
 
+class PlaceTopHome(ListCreateAPIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = PlaceSerializer
+    def get(self, request, format = None):
+        objects = Place.objects.all().order_by('-id')[:5]
+        serializer = PlaceSerializer(objects, many = True)
+        return Response(serializer.data)
+
+class PlaceMaxHome(ListCreateAPIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = PlaceSerializer
+    def get(self, request, format = None):
+        objects = Place.objects.all().order_by('-price')[:1]
+        serializer = PlaceSerializer(objects, many = True)
+        return Response(serializer.data)
+
+class PlaceCountHome(ListCreateAPIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = PlaceSerializer
+    def get(self, request, format = None):
+        objects = Place.objects.all()
+        return Response(objects.count())
+
+
 class PlaceEditHome(RetrieveUpdateDestroyAPIView):
     serializer_class = PlaceSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
     def retrieve(self, request, *args, **kwargs):
-        pk = self.kwargs.get('pk')
-        object = Place.objects.get(pk=kwargs['pk'])
-        serializer = PlaceSerializer(object)
-        return Response(serializer.data, status = status.HTTP_200_OK)
+        try:
+            pk = self.kwargs.get('pk')
+            object = Place.objects.get(pk=kwargs['pk'])
+            serializer = PlaceSerializer(object)
+            return Response(serializer.data, status = status.HTTP_200_OK)
+        except Place.DoesNotExist:
+            return Response(data={'message': "Not Page"}, status=status.HTTP_404_NOT_FOUND)
 
 class PlaceListCreateAPIView(ListCreateAPIView):
     # The AllowAny permission class will allow unrestricted access, 
@@ -71,7 +99,7 @@ class PlaceEditAPIView(RetrieveUpdateDestroyAPIView):
         if objects.id:
             Place.objects.get(id=objects.id).delete()
             return Response(data={'message': "Delete Success"},
-                        status=status.HTTP_400_BAD_REQUEST)
+                        status=status.HTTP_200_OK)
         self.perform_destroy(objects)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -119,6 +147,6 @@ class PlaceDetailEditAPIView(RetrieveUpdateDestroyAPIView):
         if objects.id:
             PlaceDetails.objects.get(id=objects.id).delete()
             return Response(data={'message': "Delete Success"},
-                        status=status.HTTP_400_BAD_REQUEST)
+                        status=status.HTTP_200_OK)
         self.perform_destroy(objects)
         return Response(status=status.HTTP_204_NO_CONTENT)

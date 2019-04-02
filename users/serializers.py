@@ -9,10 +9,11 @@ from rest_framework.authtoken.models import Token
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     confirm_password = serializers.CharField(write_only=True)
-
+    images = serializers.FileField(upload_to = 'tour/%Y/%m/%d/%H/%M/%S/',default='/default/default.png')
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'confirm_password', 'date_joined')
+        # fields = ('id', 'username', 'email', 'password', 'confirm_password', 'date_jo"oined')
+        fields = '__all__'
 
     def create(self, validated_data):
         user  = User.objects.create(
@@ -59,3 +60,4 @@ class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Token
         fields = ("auth_token", "created")
+    
